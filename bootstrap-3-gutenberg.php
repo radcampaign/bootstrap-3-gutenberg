@@ -4,13 +4,12 @@ Plugin Name: Bootstrap 3 Gutenberg Blocks
 Plugin URI:
 Description: Simple blocks for adding Bootstrap 3 features to the gutenberg editor
 Author: Rad Campaign
-Version: 0.0
+Version: 1.0.0
 Author URI: http://radcampaign.com
  */
 namespace BOOTSTRAP_4_GUTENBERG;
 
 class Loader {
-
 	/**
 	 * Our plugin version
 	 * @var string
@@ -134,13 +133,13 @@ class Loader {
 			$url = $this->makeDistributionFileUrl($file);
 
 			// put js in registeredAssets and use wp_register_script
-			if ( strpos($file, '.js') !== false ) {
+			if ( false !== strpos($file, '.js') ) {
 				\wp_register_script($handle, $url, $this->scriptDeps, $this->version);
 				$this->registeredAssets[] = $handle;
 			}
 
 			// put css in registeredStyleAssets and use wp_register_script
-			if ( strpos($file, '.css') !== false ) {
+			if ( false !== strpos($file, '.css') ) {
 				\wp_register_style($handle, $url, [], $this->version, 'all');
 				$this->registeredStyleAssets[] = $handle;
 			}
@@ -188,9 +187,9 @@ class Loader {
 	 */
 	private function log() {
 		$args = func_get_args();
-		if ( !empty($args) ) {
+		if ( ! empty($args) ) {
 			foreach ( $args as $arg ) {
-				if ( !is_string($arg) ) {
+				if ( ! is_string($arg) ) {
 					error_log(json_encode($arg, JSON_PRETTY_PRINT));
 					continue;
 				}
