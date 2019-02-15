@@ -10,6 +10,8 @@ textdomain: rad-bootstrap-block
  */
 namespace RAD_BOOTSTRAP_3;
 
+defined( 'ABSPATH' ) or die( 'Direct Access Not Allowed' );
+
 /**
  * Provides a way for our classes to find the url of the plugin
  * @see  Asset_Loader

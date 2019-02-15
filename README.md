@@ -1,5 +1,5 @@
 # Bootstrap 3 Gutenberg Blocks
-This plugin inserts bootstrap 3 style grid layout blocks to the gutenberg editor.
+This plugin inserts bootstrap 3 style grid layout block and a button block to the gutenberg editor.
 
 ## Requirements
 ### Wordpress
