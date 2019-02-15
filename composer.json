@@ -1,0 +1,18 @@
+{
+	"name": "radcampaign/bootstrap-3-gutenberg",
+	"description": "A WordPress Plugin for Bootstrap 3 Gutenberg Block",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "dimezilla",
+			"email": "diamond.joshh@gmail.com"
+		}
+	],
+	"require": {},
+	"autoload": {
+		"psr-4": {"RAD_BOOTSTRAP_3\\": "src"}
+	},
+	"config": {
+		"vendor-dir": "lib"
+	}
+}

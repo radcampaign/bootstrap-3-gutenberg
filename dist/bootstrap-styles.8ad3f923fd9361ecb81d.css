@@ -543,6 +543,9 @@
   -ms-user-select: none;
   user-select: none; }
 
+a.btn {
+  text-decoration: none; }
+
 .btn:focus,
 .btn:active:focus,
 .btn.active:focus,

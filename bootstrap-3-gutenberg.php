@@ -6,218 +6,85 @@ Description: Simple blocks for adding Bootstrap 3 features to the gutenberg edit
 Author: Rad Campaign
 Version: 1.0.0
 Author URI: http://radcampaign.com
+textdomain: rad-bootstrap-block
  */
-namespace BOOTSTRAP_4_GUTENBERG;
+namespace RAD_BOOTSTRAP_3;
 
-class Loader {
-	/**
-	 * Our plugin version
-	 * @var string
-	 */
-	protected $version = '0.0';
-
-	/**
-	 * For where our distribution files are
-	 * @var string
-	 */
-	protected $distributionPath = 'dist';
-
-	/**
-	 * Suffix used for registering script handles
-	 * @var string
-	 */
-	protected $tagPrefix = 'radBlocks';
-
-	/**
-	 * Storage for our plugin url
-	 * @var string
-	 */
-	protected $plugin_url = '';
-
-	/**
-	 * Storage for our plugin path
-	 * @var string
-	 */
-	protected $path = '';
-
-	/**
-	 * Singleton storage for our class instance
-	 * @var null
-	 */
-	protected static $instance = null;
-
-	/**
-	 * result of reading our manifest
-	 * @var array
-	 */
-	protected $assetMap = [];
-
-	/**
-	 * Storage for our registered asset handles
-	 * @var array
-	 */
-	protected $registeredAssets = [];
-
-	protected $registeredStyleAssets = [];
-
-	/**
-	 * All of the scripts that we develop here will require these scripts
-	 * @var array
-	 */
-	protected $scriptDeps = [
-		'lodash',
-		'wp-blocks',
-		'wp-element',
-		'wp-editor',
-		'wp-compose'
-	];
-
-	/**
-	 * Constructs our class
-	 * @return static
-	 */
-	public function __construct() {
-		$this->plugin_url = \plugin_dir_url(__FILE__);
-		$this->path = dirname(__FILE__);
-
-		// on construct lets register all of our assets
-		$this->registerAssets();
-	}
-
-	/**
-	 * Reads our manifest and finds the handles and the actual new files and saves
-	 * their association in assetMap
-	 * @return void
-	 */
-	protected function readManifest() {
-		$manifest = join('/', [$this->path, $this->distributionPath, 'manifest.json']);
-		if ( file_exists($manifest) ) {
-			$this->assetMap = json_decode(file_get_contents($manifest), TRUE);
-			// throw an error if json decode failed
-			if (json_last_error() !== JSON_ERROR_NONE) {
-				throw new \Exception('DECODING the manifest failed');
-			}
-			return;
-		}
-
-		// thorw an error if we could not find the manifest
-		throw new \Exception('Could not find manifest');
-	}
-
-	/**
-	 * Makes the file url
-	 * @param  string $filename
-	 * @return the plugin destination url of the script
-	 */
-	protected function makeDistributionFileUrl($filename = '') {
-		return join('/', [$this->plugin_url, $this->distributionPath, $filename]);
-	}
-
-	/**
-	 * makes the script handle by applying our suffix
-	 * @param  string $script the string filename of the script
-	 * @return string
-	 */
-	protected function prefixHandle($script = '') {
-		return join('/', [$this->tagPrefix, $script]);
-	}
-
-	/**
-	 * Registers our assets with our $registeredAssets storage and wordpress
-	 * @return void
-	 */
-	public function registerAssets() {
-		$this->readManifest();
-		foreach ( $this->assetMap as $handle => $file ) {
-			$handle = $this->prefixHandle($handle);
-			$url = $this->makeDistributionFileUrl($file);
-
-			// put js in registeredAssets and use wp_register_script
-			if ( false !== strpos($file, '.js') ) {
-				\wp_register_script($handle, $url, $this->scriptDeps, $this->version);
-				$this->registeredAssets[] = $handle;
-			}
-
-			// put css in registeredStyleAssets and use wp_register_script
-			if ( false !== strpos($file, '.css') ) {
-				\wp_register_style($handle, $url, [], $this->version, 'all');
-				$this->registeredStyleAssets[] = $handle;
-			}
-		}
-	}
-
-	/**
-	 * Enqueues all of the assets registered
-	 * @return [type] [description]
-	 */
-	public function enqueueAssets() {
-		foreach ( $this->registeredAssets as $handle ) {
-			\wp_enqueue_script($handle);
-		}
-
-		foreach ( $this->registeredStyleAssets as $handle ) {
-			\wp_enqueue_style($handle);
-		}
-	}
-
-	/**
-	 * Initializes our plugin by registering our assets and then enqueuing them
-	 * @return void
-	 */
-	public static function initialize() {
-		$instance = self::getInstance();
-		$instance->enqueueAssets();
-	}
-
-	/**
-	 * Singleton construct to get our stored instance
-	 * @return static
-	 */
-	protected static function getInstance() {
-		if ( is_null(self::$instance) ) {
-			self::$instance = new static();
-		}
-
-		return self::$instance;
-	}
-
-	/**
-	 * Helper logging function for debugging
-	 * @return void
-	 */
-	private function log() {
-		$args = func_get_args();
-		if ( ! empty($args) ) {
-			foreach ( $args as $arg ) {
-				if ( ! is_string($arg) ) {
-					error_log(json_encode($arg, JSON_PRETTY_PRINT));
-					continue;
-				}
-
-				error_log($arg);
-			}
-			return;
-		}
-
-		error_log('[]');
-	}
+/**
+ * Provides a way for our classes to find the url of the plugin
+ * @see  Asset_Loader
+ * @return string
+ */
+function get_plugin_url() {
+	return \plugin_dir_url(__FILE__);
 }
+
+/**
+ * Provides a way for our classes to find a way to the root plugin directory
+ * @see  Asset_loader
+ * @return string
+ */
+function get_plugin_path() {
+	return \plugin_dir_path(__FILE__);
+}
+
+/**
+ * provides an easy way to retrieve the text domain of the plugin
+ * @return string
+ */
+function get_text_domain() {
+	return 'rad-bootstrap-block';
+}
+
+require_once( get_plugin_path() . '/lib/autoload.php');
+
+/*
+  Set up our settings page and settings
+ */
+$settings = Settings::getInstance();
+
+add_action('admin_menu', function () use ( $settings ) {
+	$settings->settingsMenu();
+});
+
+add_action('admin_init', function () use ( $settings ) {
+	$settings->settingsInit();
+});
 
 /**
  * Load all of our assets when the block enqueue action is called
  */
-add_action('enqueue_block_editor_assets', function () {
-	Loader::initialize();
+add_action( 'enqueue_block_editor_assets', function () {
+	$loader = Asset_Loader::initialize();
+	$loader->enqueueJS( 'bootstrap-block-editor.js' );
+	$loader->enqueueStyle( 'bootstrap-block-editor.css' );
+
+	// if we are to load the bootstrap styles in the editor, this will
+	// do that.
+	if ( Settings::loadBootstrapInEditor() ) {
+		$loader->enqueueStyle( 'bootstrap-styles.css' );
+	}
 });
+
+/**
+ * If load on the front end, lets load our bootstrap styles
+ * on the front end
+ */
+if ( Settings::loadBootstrapOnFrontEnd() ) {
+	add_action( 'wp_enqueue_scripts', function () {
+		$loader = Asset_Loader::initialize();
+		$loader->enqueueStyle( 'bootstrap-styles.css' );
+	});
+}
 
 /**
  * Adds a new block category to the block editor
  */
-add_filter('block_categories', function ($categories) {
+add_filter('block_categories', function ( $categories ) {
 	return array_merge($categories, [
 		[
 			'slug'  =>  'bootstrap-blocks',
-			'title' => __('Bootstrap Blocks', 'bootstrap-blocks')
+			'title' => __('Bootstrap Blocks', 'rad-bootstrap-block')
 		]
 	]);
 }, 10);
