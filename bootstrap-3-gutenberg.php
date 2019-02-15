@@ -92,7 +92,7 @@ class Loader {
 	 */
 	protected function readManifest() {
 		$manifest = join('/', [$this->path, $this->distributionPath, 'manifest.json']);
-		if (file_exists($manifest)) {
+		if ( file_exists($manifest) ) {
 			$this->assetMap = json_decode(file_get_contents($manifest), TRUE);
 			// throw an error if json decode failed
 			if (json_last_error() !== JSON_ERROR_NONE) {
@@ -129,18 +129,18 @@ class Loader {
 	 */
 	public function registerAssets() {
 		$this->readManifest();
-		foreach ($this->assetMap as $handle => $file) {
+		foreach ( $this->assetMap as $handle => $file ) {
 			$handle = $this->prefixHandle($handle);
 			$url = $this->makeDistributionFileUrl($file);
 
 			// put js in registeredAssets and use wp_register_script
-			if (strpos($file, '.js') !== false) {
+			if ( strpos($file, '.js') !== false ) {
 				\wp_register_script($handle, $url, $this->scriptDeps, $this->version);
 				$this->registeredAssets[] = $handle;
 			}
 
 			// put css in registeredStyleAssets and use wp_register_script
-			if (strpos($file, '.css') !== false) {
+			if ( strpos($file, '.css') !== false ) {
 				\wp_register_style($handle, $url, [], $this->version, 'all');
 				$this->registeredStyleAssets[] = $handle;
 			}
@@ -152,11 +152,11 @@ class Loader {
 	 * @return [type] [description]
 	 */
 	public function enqueueAssets() {
-		foreach ($this->registeredAssets as $handle) {
+		foreach ( $this->registeredAssets as $handle ) {
 			\wp_enqueue_script($handle);
 		}
 
-		foreach ($this->registeredStyleAssets as $handle) {
+		foreach ( $this->registeredStyleAssets as $handle ) {
 			\wp_enqueue_style($handle);
 		}
 	}
@@ -175,7 +175,7 @@ class Loader {
 	 * @return static
 	 */
 	protected static function getInstance() {
-		if (is_null(self::$instance)) {
+		if ( is_null(self::$instance) ) {
 			self::$instance = new static();
 		}
 
@@ -188,9 +188,9 @@ class Loader {
 	 */
 	private function log() {
 		$args = func_get_args();
-		if (!empty($args)) {
-			foreach ($args as $arg) {
-				if (!is_string($arg)) {
+		if ( !empty($args) ) {
+			foreach ( $args as $arg ) {
+				if ( !is_string($arg) ) {
 					error_log(json_encode($arg, JSON_PRETTY_PRINT));
 					continue;
 				}
@@ -204,17 +204,20 @@ class Loader {
 	}
 }
 
+/**
+ * Load all of our assets when the block enqueue action is called
+ */
 add_action('enqueue_block_editor_assets', function () {
 	Loader::initialize();
 });
 
 /**
- * Adds a new category
+ * Adds a new block category to the block editor
  */
 add_filter('block_categories', function ($categories) {
 	return array_merge($categories, [
 		[
-			'slug' => 'bootstrap-blocks',
+			'slug'  =>  'bootstrap-blocks',
 			'title' => __('Bootstrap Blocks', 'bootstrap-blocks')
 		]
 	]);
