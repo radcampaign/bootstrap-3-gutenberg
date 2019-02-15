@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: Bootstrap 3 Gutenberg Blocks
+Plugin Name: Rad Bootstrap 3 Gutenberg Blocks
 Plugin URI:
 Description: Simple blocks for adding Bootstrap 3 features to the gutenberg editor
 Author: Rad Campaign

@@ -1,11 +1,11 @@
-=== Bootstrap 3 Gutenberg Blocks ===
+=== Rad Bootstrap 3 Gutenberg Blocks ===
 Contributors: jdiamonte
 Tags: Bootstrap 3, Gutenberg, block editor
 Requires at least: 5.0
 Tested up to: 5.03
 Requires PHP: 5.6
-License: MIT
-License URI: https://opensource.org/licenses/MIT
+License: GPLv2 or later
+License URI: https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html
 
 This plugin inserts bootstrap 3 style grid layout block and a button block to the gutenberg editor.
 
