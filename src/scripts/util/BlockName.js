@@ -7,5 +7,5 @@ const { applyFilters } = wp.hooks;
 const pluginName = applyFilters('bootstrap-blocks-namespace', 'rad-bootstrap-blocks');
 
 module.exports = (name = '') => {
-  return pluginName + '/' + name;
+	return pluginName + '/' + name;
 };

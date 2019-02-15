@@ -1,6 +1,11 @@
 /**
  * Registers our custom Bootstrap 4 blocks
  */
+// lets make sure lodash is required
+if (typeof window._ === 'undefined') {
+	window._ = require('lodash');
+}
+
 // let set up a custom global
 window.RAD = {};
 

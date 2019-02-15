@@ -1,34 +1,34 @@
 .editor-block-list__layout .editor-block-list__block[data-type="rad-bootstrap-blocks/bootstrap-column"] .editor-block-list__block-edit::before {
-  content: none;
+	content: none;
 }
 
 div.wp-block[data-type="rad-bootstrap-blocks/bootstrap-column"] {
-  .bootstrap-column-controls {
-    color: #191e23;
-    opacity: 0.62;
-  }
+	.bootstrap-column-controls {
+		color: #191e23;
+		opacity: 0.62;
+	}
 
-  > .editor-block-list__insertion-point,
-  > .editor-block-list__block-edit {
-    margin-top: 0;
-  }
+	> .editor-block-list__insertion-point,
+	> .editor-block-list__block-edit {
+		margin-top: 0;
+	}
 
-  > .editor-block-list__block-edit {
-    margin-bottom: 0;
-  }
+	> .editor-block-list__block-edit {
+		margin-bottom: 0;
+	}
 
-  .col-editor {
-    border: 1px dotted #191e23;
-  }
+	.col-editor {
+		border: 1px dotted #191e23;
+	}
 }
 
 .edit-post-sidebar .editor-url-input input[type="text"] {
-  max-width: 100%;
+	max-width: 100%;
 }
 
 /**
  * Fix for the range control slider
  */
 .components-range-control input.components-range-control__slider {
-  margin: 1px;
+	margin: 1px;
 }
