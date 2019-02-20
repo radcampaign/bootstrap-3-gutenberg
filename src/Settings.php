@@ -87,8 +87,8 @@ class Settings {
 	 */
 	public function settingsMenu() {
 		\add_menu_page(
-			'Bootstrap 3 Block Settings',
-			'Bootstrap 3 Block Settings',
+			plugin_title(false) . ' Plugin Settings',
+			plugin_title(false),
 			$this->capability,
 			$this->page_id,
 			[$this, 'settingsPage']
@@ -136,6 +136,23 @@ class Settings {
 		$this->registerSettings();
 		$this->registerSettingsSections();
 		$this->registerSettingsFields();
+
+		// add our settings option page link to the plugins table
+		add_filter( "plugin_action_links_" . get_plugin_basename(), [$this, 'settingsLink'] );
+	}
+
+	/**
+	 * Callback for our action links filter
+	 * @param  [type] $links [description]
+	 * @return [type]        [description]
+	 */
+	public function settingsLink($links) {
+		array_push(
+			$links,
+			'<a href="/wp-admin/admin.php?page=' . $this->page_id . '">' . __('Settings', get_text_domain()) . '</a>'
+		);
+
+		return $links;
 	}
 
 	/**
@@ -156,8 +173,8 @@ class Settings {
 	 */
 	protected function registerSettingsSections() {
 		\add_settings_section(
-			$this->prefixSetting('section_load_bootstrap'),
-			__( 'Load Bootstrap into block Editor', get_text_domain()),
+			$this->prefixSetting( 'section_load_bootstrap' ),
+			__( 'Load Bootstrap into block Editor', get_text_domain() ),
 			[$this, 'settingsSection'],
 			$this->page_id
 		);
@@ -248,7 +265,7 @@ class Settings {
 	 */
 	public function settingsSection( $args ) {
 		?>
-			<p id="<?php echo esc_attr( $args['id'] ); ?>"><?php esc_html_e( 'Tell us where to load Bootstrap. If you already have bootstrap loded in your theme and in the block editor, then you will want to turn these off. If you do not however, you can include these here. This will not load ALL of bootstrap. This will only load the parts of bootstrap that are needed by our blocks. In this version, we have blocks for columns and buttons. Thus we cherry-picked the column styles and button styles from bootstrap and packaged them here nicely.', get_text_domain() ); ?></p>
+			<p id="<?php echo esc_attr( $args['id'] ); ?>"><?php esc_html_e( 'Tell us where to load Bootstrap. If you already have bootstrap loaded in your theme and in the block editor, then you will want to turn these off. If you do not however, you can include these here. This will not load ALL of bootstrap. This will only load the parts of bootstrap that are needed by our blocks. In this version, we have blocks for columns and buttons. Thus we cherry-picked the column styles and button styles from bootstrap and packaged them here nicely.', get_text_domain() ); ?></p>
 		<?php
 	}
 

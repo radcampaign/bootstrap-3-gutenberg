@@ -183,7 +183,6 @@ class Asset_Loader {
 		}
 
 		if ( $this->isRegisteredJS( $handle ) ) {
-			$this->log('enqueing js');
 			\wp_enqueue_script( $handle );
 			return true;
 		}
@@ -257,6 +256,10 @@ class Asset_Loader {
 	 * @return void
 	 */
 	private function log() {
+		if (defined( 'WP_DEBUG') && true !== WP_DEBUG ) {
+			return;
+		}
+
 		$args = func_get_args();
 		if ( ! empty($args) ) {
 			foreach ( $args as $arg ) {

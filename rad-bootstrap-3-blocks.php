@@ -1,16 +1,20 @@
 <?php
 /*
-Plugin Name: Rad Bootstrap 3 Gutenberg Blocks
+Plugin Name: Rad Bootstrap 3 Blocks
 Plugin URI:
-Description: Simple blocks for adding Bootstrap 3 features to the gutenberg editor
+Description: Simple blocks that add Bootstrap 3 features to the gutenberg editor
 Author: Rad Campaign
-Version: 1.0.0
+Version: 1.1.0
 Author URI: http://radcampaign.com
 textdomain: rad-bootstrap-block
  */
 namespace RAD_BOOTSTRAP_3;
 
 defined( 'ABSPATH' ) or die( 'Direct Access Not Allowed' );
+
+function get_plugin_basename() {
+	return \plugin_basename( __FILE__ );
+}
 
 /**
  * Provides a way for our classes to find the url of the plugin
@@ -28,6 +32,21 @@ function get_plugin_url() {
  */
 function get_plugin_path() {
 	return \plugin_dir_path(__FILE__);
+}
+
+/**
+ * Helper function for our source code to keep the title
+ * consistent across the plugin
+ * @param  boolean $translate  whether or not to run it through our translator
+ * @return string
+ */
+function plugin_title($translate = true) {
+	$title = 'Rad Bootstrap 3 Blocks';
+	if ($translate) {
+		return __($title, get_text_domain());
+	}
+
+	return $title;
 }
 
 /**
