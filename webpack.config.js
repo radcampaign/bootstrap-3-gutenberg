@@ -2,6 +2,34 @@ const path = require('path');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const CleanWebPackPlugin = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const _ = require('lodash');
+
+const wplib = [
+  'blocks',
+  'components',
+  'date',
+  'editor',
+  'element',
+  'i18n',
+  'utils',
+  'data',
+  'viewport',
+  'keycodes'
+];
+
+let externals = {
+	backbone: 'Backbone',
+	jquery: 'jQuery',
+	lodash: 'lodash',
+	moment: 'moment',
+	react: 'React',
+	'react-dom': 'ReactDOM',
+	tinymce: 'tinymce',
+}
+
+wplib.forEach((lib) => {
+	externals[`@wordpress/${lib}`] = `wp.${lib}`;
+});
 
 module.exports = {
 	entry: {
@@ -13,6 +41,7 @@ module.exports = {
 			'./assets/styles/bootstrap.scss'
 		]
 	},
+	externals,
 	output: {
 		filename: 'bootstrap-block-editor-[hash].js',
 		path: path.resolve(__dirname, 'dist')

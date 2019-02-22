@@ -68,7 +68,11 @@ class Asset_Loader {
 		'wp-blocks',
 		'wp-element',
 		'wp-editor',
-		'wp-compose'
+		'wp-compose',
+		'wp-viewport',
+		'wp-data',
+		'wp-keycodes',
+		'wp-components'
 	];
 
 	/**

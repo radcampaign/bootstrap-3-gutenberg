@@ -11,6 +11,7 @@ window.RAD = {};
 
 // utils
 import BlockLibrary from './util/BlockLibrary.js';
+
 // save our block library globally
 window.RAD.blockLibrary = BlockLibrary;
 
@@ -26,3 +27,6 @@ import Button from './blocks/Button.js';
 
 // this basically closes the libary
 window.RAD.blockLibrary.registerBlocks();
+
+// add our extended functionality
+require('./lib/added-functionality.js');

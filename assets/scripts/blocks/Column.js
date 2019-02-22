@@ -2,21 +2,36 @@ import ClassNamesConcat from 'classnames';
 import WPIcons from '../util/WPIconsDict.js';
 
 const __ = wp.i18n.__;
+const { applyFilters } = wp.hooks;
 const el = wp.element.createElement;
 const { Fragment } = wp.element;
 const {
 	InspectorControls,
 	InnerBlocks,
+	BlockControls,
 } = wp.editor;
 const {
 	PanelBody,
 	RangeControl,
 	SelectControl,
 	Button,
-	Popover,
+	Toolbar,
+	Dropdown,
+	IconButton,
 } = wp.components;
+const { withState } = wp.compose;
 
 class Column {
+
+	constructor() {
+		this.breaksize_options = applyFilters('rad-bootstrap-column-breakpoint-options', [
+			{label: 'Extra Small', value: 'xs'},
+			{label: 'Small', value: 'sm'},
+			{label: 'Medium', value: 'md'},
+			{label: 'Large', value: 'lg'}
+		]);
+	}
+
 	name() {
 		return 'bootstrap-column';
 	}
@@ -34,22 +49,19 @@ class Column {
 	}
 
 	edit(props) {
+		let attributes = props.attributes;
+
 		return el(
 			Fragment,
 			null,
 			this.inspectorControlsElement(props),
+			this.blockControls(props, props.isSelected),
 			el(
 				'div',
 				{
-					className: ClassNamesConcat('col-editor', this.columnClass(props.attributes))
+					className: ClassNamesConcat('col-editor', this.columnClass(attributes))
 				},
-				el(
-					'div',
-					{
-						className: 'bootstrap-column-controls'
-					},
-					 this.columnClass(props.attributes)
-				),
+				// this.editColHeader(attributes),
 				el(
 					InnerBlocks,
 					{
@@ -60,6 +72,19 @@ class Column {
 		);
 	}
 
+	editColHeader(attributes) {
+		let size = attributes.size,
+				breakSize = attributes.breakSize;
+
+		return el(
+			'div',
+			{
+				className: 'bootstrap-column-controls'
+			},
+			__('column: size=' + size + '; breakpoint=' + breakSize)
+		);
+	}
+
 	columnClass(attributes) {
 		let size = attributes.size,
 				breakSize = attributes.breakSize;
@@ -67,42 +92,38 @@ class Column {
 	}
 
 	inspectorControlsElement(props) {
+		let attributes = props.attributes,
+				setAttributes = props.setAttributes;
+
 		return el(
 			InspectorControls,
 			null,
 			el(
 				PanelBody,
-				null,
-				this.attributeElements(props)
+				{
+					title: __('Column Width'),
+				},
+				this.rangeControl(attributes, setAttributes)
+			),
+			el(
+				PanelBody,
+				{
+					title: __('Breakpoint'),
+				},
+				this.breakSizeControl(attributes, setAttributes)
 			)
 		);
 	}
 
-	attributeElements(props) {
-		let attributes = props.attributes,
-				setAttributes = props.setAttributes;
-
-		return el(
-			'div',
-			{className: 'bootstrap-column-attribute-editor'},
-			this.rangeControl(attributes, setAttributes),
-			this.breakSizeControl(attributes, setAttributes)
-		);
-	}
-
-	breakSizeControl(attributes, setAttributes) {
+	breakSizeControl(attributes, setAttributes, showHelp = true) {
 		let breakSize = attributes.breakSize;
 		return el(
 			SelectControl,
 			{
 				value: breakSize,
-				label: __('Break Size'),
-				options: [
-					{label: 'Extra Small', value: 'xs'},
-					{label: 'Small', value: 'sm'},
-					{label: 'Medium', value: 'md'},
-					{label: 'Large', value: 'lg'}
-				],
+				label: __('Choose Breakpoint'),
+				options: this.breaksize_options,
+				help: showHelp && __('In Boostrap, breakpoint is the screen width under which the columns will "break" from being aligned next to each other to which the column will stack underneath or above it\'s sibling columns.'),
 				onChange(nextBreak) {
 					setAttributes({
 						breakSize: nextBreak
@@ -112,7 +133,7 @@ class Column {
 		);
 	}
 
-	rangeControl(attributes, setAttributes) {
+	rangeControl(attributes, setAttributes, showHelp = true) {
 		let size = attributes.size;
 
 		return el(
@@ -129,10 +150,115 @@ class Column {
 						});
 					},
 					min: 1,
-					max: 12
+					max: 12,
+					help: showHelp && __('Bootstrap is based on a twelve column grid. The column width size is how many columns this column will expand across. Thus a value of 6 means that the column will span 50% of the width.'),
 				}
-			),
+			)
+		);
+	}
 
+	blockControls(props, active = false) {
+		return el(
+			BlockControls,
+			{
+				isActive: active
+			},
+			this.rangeControlDropDown(props),
+			this.breakSizeControlDropDown(props)
+		);
+	}
+
+	breakSizeControlDropDown(props) {
+		let that = this,
+				attributes = props.attributes,
+				setAttributes = props.setAttributes;
+
+		let menuButtons = this.breaksize_options.map((option) => {
+			return el(
+				Button,
+				{
+					className: "components-menu-item__button editor-block-settings-menu__control",
+					onClick: ()=> {
+						setAttributes({breakSize: option.value});
+					}
+				},
+				__(option.label)
+			);
+		});
+
+		return el(
+			Toolbar,
+			null,
+			el(
+				Dropdown,
+				{
+					className: 'rad-breasize-control',
+					contentClassName: "rad-dropdown",
+					position: "bottom right",
+					renderContent(dref) {
+						return el(
+							"div",
+							{
+								role: "menu",
+								"aria-orientation": "vertical",
+								className: "editor-block-settings-menu__content"
+							},
+							menuButtons
+						);
+					},
+					renderToggle(dref) {
+						return that.dropDownButton(
+							__("Breakpoint"),
+							dref.onToggle,
+							dref.isOpen
+						);
+					}
+				}
+			)
+		);
+	}
+
+	rangeControlDropDown(props) {
+		let that = this,
+				attributes = props.attributes,
+				setAttributes = props.setAttributes;
+
+		return el(
+			Toolbar,
+			null,
+			el(
+				Dropdown,
+				{
+					className: "rad-range-control",
+					contentClassName: "rad-popover",
+					position: "bottom right",
+					renderContent(dref) {
+						return el(
+							'div',
+							{},
+							that.rangeControl(attributes, setAttributes, false)
+						);
+					},
+					renderToggle(dref) {
+						return that.dropDownButton(
+							__("Width"),
+							dref.onToggle,
+							dref.isOpen
+						);
+					},
+				}
+			)
+		);
+	}
+
+	dropDownButton(content, onClick, expanded) {
+		return el(
+			Button,
+			{
+				onClick,
+				"aria-expanded": expanded,
+			},
+			content
 		);
 	}
 
@@ -172,9 +298,7 @@ class Column {
 				reusable: false,
 				html: false
 			},
-			edit(props) {
-				return that.edit(props);
-			},
+			edit: withState({'something': null})(that.edit.bind(that)),
 			save(props) {
 				return that.save(props);
 			}

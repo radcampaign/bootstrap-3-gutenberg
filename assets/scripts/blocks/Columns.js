@@ -9,11 +9,13 @@ const {
 	InspectorControls,
 	InnerBlocks,
 } = wp.editor;
+// import InnerBlocks from '../components/columns-inner-blocks';
 const {
 	PanelBody,
 	RangeControl,
 	CheckboxControl
 } = wp.components;
+const { withState } = wp.compose;
 
 class Columns {
 
@@ -52,7 +54,7 @@ class Columns {
 			},
 			wrapContainer: {
 				type: "boolean",
-				default: true,
+				default: false,
 			}
 		};
 	}
@@ -79,7 +81,7 @@ class Columns {
 	getColumnsTemplateFunc() {
 		let columnsNum = (columns) => {
 			return _.times(columns, () => {
-				return [this.blockLibrary().getBlockTag('bootstrap-column')];
+				return [this.blockLibrary().getBlockTag('bootstrap-column'), {'something': 'new'}];
 			});
 		};
 
@@ -94,7 +96,8 @@ class Columns {
 				classes = ClassNamesConcat(className, 'has-'.concat(columns,"-columns"), 'row'),
 				wrapContainer = attributes.wrapContainer;
 
-		return el(
+
+		let editor = el(
 			Fragment,
 			null,
 			this.inspectorControlsElement(props),
@@ -105,10 +108,12 @@ class Columns {
 					{
 						className: classes
 					},
-					this.innerBlocksElement(columns)
+					this.innerBlocksElement(columns, props.clientId)
 				)
 			)
 		);
+
+		return editor;
 	}
 
 	containerize(toWrap, element) {
@@ -129,7 +134,9 @@ class Columns {
 			null,
 			el(
 				PanelBody,
-				null,
+				{
+					title: __('Number of Columns'),
+				},
 				el(
 					RangeControl,
 					{
@@ -143,12 +150,19 @@ class Columns {
 						min:2,
 						max: 6
 					}
-				),
+				)
+			),
+			el(
+				PanelBody,
+				{
+					title: __('Add Container?'),
+					initialOpen: false,
+				},
 				el(
 					CheckboxControl,
 					{
 						value: wrapContainer,
-						help: __('whether to wrap the row in a container.'),
+						help: __('A container in Bootstrap adds extra padding around the columns.'),
 						checked: wrapContainer,
 						label: __('Wrap the row in a Container?'),
 						heading: __('Wrap Container'),
@@ -161,7 +175,7 @@ class Columns {
 		);
 	}
 
-	innerBlocksElement(columns) {
+	innerBlocksElement(columns, clientId) {
 		let getColumnsTemplate = this.getColumnsTemplateFunc();
 		let columnsTemplate = getColumnsTemplate(columns);
 
@@ -169,8 +183,9 @@ class Columns {
 			InnerBlocks,
 			{
 				template: columnsTemplate,
-				templateLock: "all",
+				templateLock: "insert",
 				allowedBlocks: [this.blockLibrary().getBlockTag('bootstrap-column')],
+				clientId
 			}
 		);
 
@@ -189,12 +204,8 @@ class Columns {
 				align: ['wide', 'full'],
 				html: false
 			},
-			save(props) {
-				return that.save(props);
-			},
-			edit(props) {
-				return that.edit(props);
-			},
+			save: that.save.bind(that),
+			edit: that.edit.bind(that),
 		};
 	}
 }
