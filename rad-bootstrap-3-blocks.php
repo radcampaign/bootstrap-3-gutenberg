@@ -4,7 +4,7 @@ Plugin Name: Rad Bootstrap 3 Blocks
 Plugin URI:
 Description: Simple blocks that add Bootstrap 3 features to the gutenberg editor
 Author: Rad Campaign
-Version: 1.1.0
+Version: 1.2.1
 Author URI: http://radcampaign.com
 textdomain: rad-bootstrap-block
  */

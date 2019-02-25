@@ -2,6 +2,7 @@
  * Most of this is an overwrite of @wordpress/editor/src/componenets/block-list
  * so that we could insert our row at the right place
  */
+import _ from 'lodash';
 import { Component } from 'wp.element';
 import { withSelect, withDispatch } from 'wp.data';
 import { compose } from 'wp.compose';

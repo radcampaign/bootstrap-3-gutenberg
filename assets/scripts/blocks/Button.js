@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import ClassNamesConcat from 'classnames';
 import WPIcons from '../util/WPIconsDict.js';
 

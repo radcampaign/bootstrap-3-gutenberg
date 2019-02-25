@@ -3,7 +3,7 @@
  * so that we could import our own block-list and our own block-list block
  * and put our grid classes in the right place
  */
-
+import _ from 'lodash';
 import classnames from 'classnames';
 import { createElement as el } from 'wp.element';
 import { withViewportMatch } from 'wp.viewport';
