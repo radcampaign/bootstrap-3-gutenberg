@@ -2,6 +2,7 @@
  * this will keep track of all of our blocks
  */
 import BlockName from '../util/BlockName.js';
+import _ from 'lodash';
 const { registerBlockType } = wp.blocks;
 
 class BlockLibrary {

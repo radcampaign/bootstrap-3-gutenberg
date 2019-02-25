@@ -2,7 +2,7 @@
  * We are going to inject a little jquery to fix some bad behavior
  */
 
-const $ = window.jQuery;
+import $ from 'jquery';
 const editor_dispatcher = wp.data.dispatch('core/editor');
 const editor_selector = wp.data.select('core/editor');
 
@@ -18,7 +18,6 @@ $(document).ready(() => {
 	 */
 	$('#wpbody').delegate(editorColumnsSelector + ' > div.editor-block-list__insertion-point', 'click', function (ev) {
 		if ($(ev.target).parents('button').length === 0) {
-			console.log("button click");
 			let blockID = ev.target.closest(editorColumnsSelector).id;
 			blockID = blockID.replace('block-','');
 			editor_dispatcher.selectBlock(blockID, -1);

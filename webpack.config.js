@@ -2,11 +2,11 @@ const path = require('path');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const CleanWebPackPlugin = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const _ = require('lodash');
 
 const wplib = [
   'blocks',
   'components',
+  'compose',
   'date',
   'editor',
   'element',
@@ -14,7 +14,8 @@ const wplib = [
   'utils',
   'data',
   'viewport',
-  'keycodes'
+  'keycodes',
+  'dom',
 ];
 
 let externals = {
@@ -29,6 +30,7 @@ let externals = {
 
 wplib.forEach((lib) => {
 	externals[`@wordpress/${lib}`] = `wp.${lib}`;
+	externals[`wp.${lib}`] = `wp.${lib}`;
 });
 
 module.exports = {

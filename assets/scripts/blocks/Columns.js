@@ -2,20 +2,23 @@ import memize from 'memize';
 import ClassNamesConcat from 'classnames';
 import WPIcons from '../util/WPIconsDict.js';
 
-const __ = wp.i18n.__;
-const el = wp.element.createElement;
-const { Fragment } = wp.element;
-const {
+import { __ } from 'wp.i18n';
+import { createElement as el } from 'wp.element';
+import { Fragment } from 'wp.element';
+import {
 	InspectorControls,
-	InnerBlocks,
-} = wp.editor;
-// import InnerBlocks from '../components/columns-inner-blocks';
-const {
+	//InnerBlocks,
+} from 'wp.editor';
+import InnerBlocks from '../components/columns-inner-blocks';
+
+import {
 	PanelBody,
 	RangeControl,
-	CheckboxControl
-} = wp.components;
-const { withState } = wp.compose;
+	CheckboxControl,
+} from 'wp.components';
+
+import { withState } from 'wp.compose';
+
 
 class Columns {
 
@@ -93,7 +96,7 @@ class Columns {
 				className = props.className;
 
 		let columns = attributes.columns,
-				classes = ClassNamesConcat(className, 'has-'.concat(columns,"-columns"), 'row'),
+				classes = ClassNamesConcat(className, 'has-'.concat(columns,"-columns")),
 				wrapContainer = attributes.wrapContainer;
 
 
@@ -183,7 +186,7 @@ class Columns {
 			InnerBlocks,
 			{
 				template: columnsTemplate,
-				templateLock: "insert",
+				templateLock: "all",
 				allowedBlocks: [this.blockLibrary().getBlockTag('bootstrap-column')],
 				clientId
 			}

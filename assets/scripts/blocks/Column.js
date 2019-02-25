@@ -59,7 +59,7 @@ class Column {
 			el(
 				'div',
 				{
-					className: ClassNamesConcat('col-editor', this.columnClass(attributes))
+					className: 'col-editor'
 				},
 				// this.editColHeader(attributes),
 				el(

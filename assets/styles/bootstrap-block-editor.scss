@@ -2,49 +2,81 @@
 // 	content: none;
 // }
 
-div.wp-block[data-type="rad-bootstrap-blocks/bootstrap-column"] {
-	> .editor-block-list__insertion-point {
-		display: none;
-	}
+/**
+ * Layout styling for the editor
+ */
 
-	> .editor-block-list__block-edit::before {
-		content: none;
+@mixin makeClickable() {
+	> .editor-block-list-insertion-point {
+		top: -15px;
 	}
-
-	> .editor-block-list__block-edit > .editor-block-contextual-toolbar {
-		margin-left: 0;
-	}
-
-	// > .editor-block-list__insertion-point,
-	// > .editor-block-list__block-edit {
-	// 	margin-top: 0;
-	// }
 
 	> .editor-block-list__block-edit {
-		margin-bottom: 0;
-		margin-top: 0;
-	}
-
-	.col-editor {
 		padding-top: 10px;
 		padding-bottom: 10px;
-	}
 
-	&.is-hovered .col-editor {
-		outline: 1px solid #007cba;
-	}
+		&:before {
+			top: -10px;
+			bottom: -10px;
+		}
 
-	&.is-selected .col-editor {
-		outline: 1px solid rgba(145, 151, 162, 0.25);
-	}
-
-	.bootstrap-column-controls {
-		color: #191e23;
-		opacity: 0.62;
-		font-size: 16px;
+		@media (min-width: 600px) {
+			> .editor-block-contextual-toolbar {
+				transform: translateY(-58px);
+			}
+		}
 	}
 }
 
+div.wp-block[data-type="rad-bootstrap-blocks/bootstrap-columns"] {
+	@include makeClickable();
+
+	> .editor-block-list__block-edit {
+		margin-top: 0;
+		margin-bottom: 0;
+	}
+
+	.wp-block-rad-bootstrap-blocks-bootstrap-columns {
+		.rb-editor-row {
+			.rb-editor-column {
+				> .editor-block-list__block {
+					padding-right: 0;
+					padding-left: 0;
+				}
+
+				div.wp-block[data-type="rad-bootstrap-blocks/bootstrap-column"] {
+					// allows for clicking into the column
+					@include makeClickable();
+
+					// remove the crazy padding on blocks in columns so that
+					// they align vertically correctly
+					.wp-block {
+						padding-right: 0;
+						padding-left: 0;
+
+						&:first-of-type .editor-block-list__block-edit {
+							margin-top: 10px;
+						}
+					}
+				}
+			}
+
+			.editor-block-list__layout {
+				margin-right: 0;
+				margin-left: 0;
+			}
+
+			.editor-block-list__block-edit {
+				margin-right: 0;
+				margin-left: 0;
+			}
+		}
+	}
+}
+
+/**
+ * Fix for our sidebar text input
+ */
 .edit-post-sidebar .editor-url-input input[type="text"] {
 	max-width: 100%;
 }
@@ -56,6 +88,9 @@ div.wp-block[data-type="rad-bootstrap-blocks/bootstrap-column"] {
 	margin: 1px;
 }
 
+/**
+ * Fix for our dropdown menus in the column toolbar
+ */
 .rad-popover .components-popover__content {
 	padding: 10px 5px;
 
@@ -64,3 +99,4 @@ div.wp-block[data-type="rad-bootstrap-blocks/bootstrap-column"] {
 		margin: 0 auto;
 	}
 }
+
